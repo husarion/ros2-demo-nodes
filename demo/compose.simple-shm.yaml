@@ -1,0 +1,13 @@
+services:
+
+  talker:
+    image: husarion/ros2-demo-nodes:humble
+    network_mode: host
+    ipc: host
+    command: ros2 run demo_nodes_cpp talker
+
+  listener:
+    image: husarion/ros2-demo-nodes:humble
+    network_mode: host
+    ipc: host
+    command: ros2 run demo_nodes_cpp listener

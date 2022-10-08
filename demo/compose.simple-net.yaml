@@ -1,0 +1,9 @@
+services:
+
+  talker:
+    image: husarion/ros2-demo-nodes:humble
+    command: ros2 run demo_nodes_cpp talker
+
+  listener:
+    image: husarion/ros2-demo-nodes:humble
+    command: ros2 run demo_nodes_cpp listener

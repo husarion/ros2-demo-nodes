@@ -1,0 +1,29 @@
+services:
+
+  ds1:
+    image: ros:humble-ros-core
+    command: >
+      fast-discovery-server 
+      --server-id 0
+      --ip-address ds1
+      --port 1234
+
+  ds2:
+    image: ros:humble-ros-core
+    command: >
+      fast-discovery-server 
+      --server-id 1
+      --ip-address ds2
+      --port 9876
+
+  talker:
+    image: husarion/ros2-demo-nodes:humble
+    environment:
+      - ROS_DISCOVERY_SERVER=ds1:1234;ds2:9876
+    command: ros2 run demo_nodes_cpp talker
+
+  listener:
+    image: husarion/ros2-demo-nodes:humble
+    environment:
+      - ROS_DISCOVERY_SERVER=ds1:1234;ds2:9876
+    command: ros2 run demo_nodes_cpp listener
