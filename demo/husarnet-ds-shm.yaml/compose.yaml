@@ -1,0 +1,29 @@
+services:
+
+  ds:
+    image: ros:humble-ros-core
+    network_mode: host
+    ipc: host
+    volumes:
+      - ./config.server.xml:/config.xml
+    command: fast-discovery-server -x /config.xml
+
+  talker:
+    image: husarion/ros2-demo-nodes:humble
+    network_mode: host
+    ipc: host
+    volumes:
+      - ./config.client.xml:/config.xml
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/config.xml
+    command: ros2 run demo_nodes_cpp talker
+
+  listener:
+    image: husarion/ros2-demo-nodes:humble
+    network_mode: host
+    ipc: host
+    volumes:
+      - ./config.client.xml:/config.xml
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/config.xml
+    command: ros2 run demo_nodes_cpp listener
