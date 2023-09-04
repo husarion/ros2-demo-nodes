@@ -1,0 +1,33 @@
+# Launching:
+# find Husarnet Join Code from app.husarnet.com and execute:
+#
+# export JOINCODE=<paste-your-joincode-here>
+# docker compose -f compose.simple.husarnet.listener.yaml up
+
+services:
+
+  husarnet-listener:
+    image: husarnet/husarnet:2.0.170
+    volumes:
+      - /var/lib/husarnet  # This will persist your Husarnet Client keys, thus IP of the container will be stable/the same between (re)boots
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0  # Husarnet is using IPv6 for the internal connections
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      - WAIT_HOSTNAMES=talker,listener
+      - HOSTNAME=listener
+      - JOINCODE
+
+  listener:
+    image: husarion/ros2-demo-nodes:humble
+    network_mode: service:husarnet-listener
+    depends_on: 
+      husarnet-listener: { condition: service_healthy }
+    environment:
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/husarnet-fastdds.xml
+    command: ros2 run demo_nodes_cpp listener
+

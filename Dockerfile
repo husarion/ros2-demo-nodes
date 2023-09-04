@@ -6,6 +6,8 @@ FROM husarnet/ros:${PREFIX}${ROS_DISTRO}-ros-core
 SHELL ["/bin/bash", "-c"]
 
 RUN apt update && apt upgrade -y && apt install -y \
+        net-tools \
+        iputils-ping \
         ros-$ROS_DISTRO-demo-nodes-py \
         ros-$ROS_DISTRO-demo-nodes-cpp && \
     apt-get autoremove -y && \
